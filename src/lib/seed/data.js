@@ -1,0 +1,197 @@
+export const seedProducts = [
+  {
+    id: "p1",
+    slug: "iphone-16-pro",
+    name: "iPhone 16 Pro",
+    category: "mobile",
+    brand: "Apple",
+    images: ["/products/iphone16pro-1.jpg", "/products/iphone16pro-2.jpg"],
+    specs: {
+      display: "6.3" Super Retina XDR",
+      chip: "A18 Pro",
+      camera: "48MP Main + 48MP Ultra Wide",
+      battery: "Up to 27h video",
+      os: "iOS 18",
+    },
+    description: "قدرتمندترین آیفون با طراحی تیتانیومی و دوربین پیشرفته.",
+    featured: true,
+  },
+  {
+    id: "p2",
+    slug: "iphone-16",
+    name: "iPhone 16",
+    category: "mobile",
+    brand: "Apple",
+    images: ["/products/iphone16-1.jpg"],
+    specs: {
+      display: "6.1" Super Retina XDR",
+      chip: "A18",
+      camera: "48MP Main + 12MP Ultra Wide",
+      battery: "Up to 22h video",
+      os: "iOS 18",
+    },
+    description: "آیفون ۱۶ با چیپ A18 و دوربین کنترل دوربین جدید.",
+    featured: true,
+  },
+  {
+    id: "p3",
+    slug: "macbook-pro-14",
+    name: "MacBook Pro 14"",
+    category: "laptop",
+    brand: "Apple",
+    images: ["/products/macbook14-1.jpg"],
+    specs: {
+      display: "14.2" Liquid Retina XDR",
+      chip: "M4 Pro",
+      ram: "18GB unified memory",
+      storage: "512GB SSD",
+      battery: "Up to 22h",
+    },
+    description: "قدرت حرفه‌ای در یک لپ‌تاپ فوق‌العاده.",
+    featured: true,
+  },
+  {
+    id: "p4",
+    slug: "airpods-pro-2",
+    name: "AirPods Pro 2",
+    category: "accessory",
+    brand: "Apple",
+    images: ["/products/airpods2-1.jpg"],
+    specs: {
+      type: "In-ear",
+      anc: "Active Noise Cancellation",
+      battery: "Up to 6h listening",
+      connectivity: "Bluetooth 5.3",
+    },
+    description: "صدای فوق‌العاده با حذف نویز فعال نسل دوم.",
+    featured: false,
+  },
+  {
+    id: "p5",
+    slug: "apple-watch-series-10",
+    name: "Apple Watch Series 10",
+    category: "accessory",
+    brand: "Apple",
+    images: ["/products/watch10-1.jpg"],
+    specs: {
+      display: "46mm OLED",
+      health: "ECG, Blood Oxygen, Sleep",
+      waterResistant: "50m",
+      battery: "Up to 18h",
+    },
+    description: "نازک‌ترین و بزرگ‌ترین صفحه نمایش اپل واچ.",
+    featured: true,
+  },
+  {
+    id: "p6",
+    slug: "ipad-pro-13",
+    name: "iPad Pro 13"",
+    category: "tablet",
+    brand: "Apple",
+    images: ["/products/ipad13-1.jpg"],
+    specs: {
+      display: "13" Ultra Retina XDR (Tandem OLED)",
+      chip: "M4",
+      storage: "256GB",
+      connectivity: "Wi-Fi 6E + 5G",
+    },
+    description: "قدرت بی‌نظیر در نازک‌ترین آیپد.",
+    featured: false,
+  },
+]
+
+export const seedVariants = [
+  { id: "v1", productId: "p1", color: "Natural Titanium", storage: "256GB", price: 89990000, sku: "IP16P-256-NT" },
+  { id: "v2", productId: "p1", color: "Natural Titanium", storage: "512GB", price: 104990000, sku: "IP16P-512-NT" },
+  { id: "v3", productId: "p1", color: "Black Titanium", storage: "256GB", price: 89990000, sku: "IP16P-256-BT" },
+  { id: "v4", productId: "p1", color: "White Titanium", storage: "512GB", price: 104990000, sku: "IP16P-512-WT" },
+  { id: "v5", productId: "p2", color: "Black", storage: "128GB", price: 54990000, sku: "IP16-128-BK" },
+  { id: "v6", productId: "p2", color: "White", storage: "256GB", price: 62990000, sku: "IP16-256-WH" },
+  { id: "v7", productId: "p3", color: "Space Black", storage: "512GB", price: 124990000, sku: "MB14-512-SB" },
+  { id: "v8", productId: "p4", color: "White", storage: "-", price: 12990000, sku: "APP2-WH" },
+  { id: "v9", productId: "p5", color: "Silver", storage: "46mm", price: 24990000, sku: "AW10-46-SV" },
+  { id: "v10", productId: "p6", color: "Space Black", storage: "256GB", price: 84990000, sku: "IP13-256-SB" },
+]
+
+export const seedBranches = [
+  {
+    id: "b1",
+    name: "شعبه ونک",
+    address: "تهران، خیابان ونک، پلاک ۱۲۳",
+    phone: "۰۲۱-۸۸۷۷۶۶۵۵",
+    hours: "۹:۰۰ - ۲۱:۰۰",
+    location: { lat: 35.7575, lng: 51.3999 },
+  },
+  {
+    id: "b2",
+    name: "شعبه تجریش",
+    address: "تهران، میدان تجریش، خیابان جعفری",
+    phone: "۰۲۱-۲۲۷۷۸۸۹۹",
+    hours: "۹:۰۰ - ۲۲:۰۰",
+    location: { lat: 35.8047, lng: 51.4330 },
+  },
+  {
+    id: "b3",
+    name: "شعبه اصفهان",
+    address: "اصفهان، خیابان چهارباغ، پلاک ۴۵",
+    phone: "۰۳۱-۳۳۲۲۱۱۰۰",
+    hours: "۹:۰۰ - ۲۱:۰۰",
+    location: { lat: 32.6546, lng: 51.6680 },
+  },
+]
+
+export const seedUsers = [
+  {
+    id: "u1",
+    name: "مدیر سیستم",
+    email: "admin@applestore.ir",
+    phone: "۰۹۱۲۳۴۵۶۷۸۹",
+    role: "admin",
+    addresses: ["تهران، ونک"],
+  },
+  {
+    id: "u2",
+    name: "علی احمدی",
+    email: "ali@example.com",
+    phone: "۰۹۱۲۱۱۲۲۳۳۴۴",
+    role: "customer",
+    addresses: ["تهران، تجریش"],
+  },
+]
+
+export const seedContent = [
+  {
+    id: "c1",
+    type: "blog",
+    slug: "iphone-16-review",
+    title: "بررسی کامل iPhone 16 Pro",
+    excerpt: "آیا آیفون ۱۶ پرو ارزش خرید دارد؟",
+    body: "...",
+    publishedAt: "2024-09-20",
+    featured: true,
+  },
+  {
+    id: "c2",
+    type: "news",
+    slug: "new-store-opening",
+    title: "افتتاح شعبه جدید در شیراز",
+    excerpt: "شعبه جدید اپل استور ایران در شیراز افتتاح شد.",
+    body: "...",
+    publishedAt: "2024-10-01",
+    featured: false,
+  },
+]
+
+export const seedOrders = [
+  {
+    id: "o1",
+    userId: "u2",
+    items: [
+      { variantId: "v1", quantity: 1, price: 89990000 },
+    ],
+    status: "delivered",
+    total: 89990000,
+    createdAt: "2024-10-15",
+    branchId: "b1",
+  },
+]

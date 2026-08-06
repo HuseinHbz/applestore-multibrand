@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id            String   @id @default(cuid())
+  name          String
+  logo          String   @default("/logo.svg")
+  primaryColor  String   @default("#007AFF") @map("primary_color")
+  currency      String   @default("تومان")
+  slogan        String   @default("فروشگاه رسمی محصولات اپل")
+  domain        String   @default("applestore.ir")
+  font          String   @default("Vazirmatn")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  branches Branch[]
+  users    User[]
+  products Product[]
+  contents Content[]
+
+  @@map("brands")
+}
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  phone     String
+  hours     String   @default("۹:۰۰ - ۲۱:۰۰")
+  lat       Float    @default(35.7)
+  lng       Float    @default(51.4)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  brandId    String  @map("brand_id")
+  brand      Brand   @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  inventories Inventory[]
+  orders     Order[]
+
+  @@map("branches")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String   @default("")
+  password  String   @default("")
+  role      Role     @default(customer)
+  addresses String[] @default([])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  brandId   String?  @map("brand_id")
+  brand     Brand?   @relation(fields: [brandId], references: [id])
+  orders    Order[]
+  reviews   Review[]
+  wishlists Wishlist[]
+
+  @@map("users")
+}
+
+enum Role {
+  customer
+  staff
+  manager
+  admin
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  category    String   @default("mobile")
+  brandName   String   @default("Apple") @map("brand_name")
+  images      String[] @default([])
+  specs       Json     @default("{}")
+  description String   @default("")
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  brandId   String   @map("brand_id")
+  brand     Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  variants  Variant[]
+  reviews   Review[]
+  wishlists Wishlist[]
+
+  @@map("products")
+}
+
+model Variant {
+  id       String @id @default(cuid())
+  color    String
+  storage  String
+  price    Int
+  sku      String @unique
+  productId String @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  inventories Inventory[]
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+
+  @@map("variants")
+}
+
+model Inventory {
+  id        String   @id @default(cuid())
+  qty       Int      @default(0)
+  branchId  String   @map("branch_id")
+  branch    Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  variantId String   @map("variant_id")
+  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([branchId, variantId])
+  @@map("inventories")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  status      OrderStatus @default(pending)
+  total       Int         @default(0)
+  address     String      @default("")
+  paymentMethod String    @default("online") @map("payment_method")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  userId    String  @map("user_id")
+  user      User    @relation(fields: [userId], references: [id])
+  branchId  String? @map("branch_id")
+  branch    Branch? @relation(fields: [branchId], references: [id])
+  items     OrderItem[]
+  salesInvoice SalesInvoice?
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  pending
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  quantity  Int    @default(1)
+  price     Int
+  orderId   String @map("order_id")
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId String @map("variant_id")
+  variant   Variant @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  quantity  Int     @default(1)
+  sessionId String  @map("session_id")
+  variantId String  @map("variant_id")
+  variant   Variant @relation(fields: [variantId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([sessionId, variantId])
+  @@map("cart_items")
+}
+
+model SalesInvoice {
+  id        String   @id @default(cuid())
+  total     Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  orderId   String   @unique @map("order_id")
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@map("sales_invoices")
+}
+
+model PurchaseInvoice {
+  id          String   @id @default(cuid())
+  supplier    String
+  total       Int
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("purchase_invoices")
+}
+
+model Content {
+  id          String      @id @default(cuid())
+  type        ContentType @default(blog)
+  slug        String      @unique
+  title       String
+  excerpt     String      @default("")
+  body        String      @default("")
+  publishedAt DateTime    @default(now()) @map("published_at")
+  featured    Boolean     @default(false)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  brandId String @map("brand_id")
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@map("contents")
+}
+
+enum ContentType {
+  blog
+  news
+  page
+  banner
+  offer
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      @default(5)
+  comment   String
+  userName  String   @map("user_name")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String? @map("user_id")
+  user      User?   @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId    String  @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
