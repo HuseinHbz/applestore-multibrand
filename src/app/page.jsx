@@ -1,26 +1,46 @@
-export const revalidate = 0; // دریافت آنی از دیتابیس در هر بار لود
+export const revalidate = 0;
 
 import { prisma } from '@/lib/prisma';
 import HomePageClient from '@/components/home/HomePageClient';
 
 export default async function HomePage() {
-  // ۱. دریافت جدیدترین محصولات از دیتابیس
-  const products = await prisma.product.findMany({
-    include: { brand: true, category: true },
-    orderBy: { createdAt: 'desc' },
-  });
+  let products = [];
+  let contents = [];
+  let settings = null;
 
-  // ۲. دریافت محتوا و اخبار فعال دیتابیس
-  const contents = await prisma.content.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-    take: 3
-  });
+  try {
+    // دریافت محصولات فقط با روابط معتبر دیتابیس
+    products = await prisma.product.findMany({
+      include: { brand: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
 
-  // ۳. دریافت تنظیمات هوشمند سایت
-  const settings = await prisma.siteSetting.findUnique({
-    where: { id: 'default' }
-  });
+  try {
+    contents = await prisma.content.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    });
+  } catch (error) {
+    console.error('Error fetching contents:', error);
+  }
 
-  return <HomePageClient products={products} contents={contents} settings={settings} />;
+  try {
+    settings = await prisma.siteSetting.findUnique({
+      where: { id: 'default' },
+    });
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+  }
+
+  return (
+    <HomePageClient 
+      products={JSON.parse(JSON.stringify(products || []))} 
+      contents={JSON.parse(JSON.stringify(contents || []))} 
+      settings={JSON.parse(JSON.stringify(settings || {}))} 
+    />
+  );
 }
