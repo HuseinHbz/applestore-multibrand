@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// دریافت جزئیات یک محصول
 export async function GET(req, { params }) {
   try {
     const { slug } = await params;
@@ -21,13 +20,12 @@ export async function GET(req, { params }) {
   }
 }
 
-// حذف محصول
 export async function DELETE(req, { params }) {
   try {
     const { slug } = await params;
 
     await prisma.product.delete({
-      where: { id: slug } // یا بر اساس slug
+      where: { id: slug }
     });
 
     return NextResponse.json({ success: true, message: 'محصول با موفقیت حذف شد' });
